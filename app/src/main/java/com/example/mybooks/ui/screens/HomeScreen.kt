@@ -79,9 +79,9 @@ fun BookList(
 @Composable
 fun BookRow(
     book: Book,
-    onReadClick: (String) -> Unit = {},
-    onEditClick: (String) -> Unit = {},
-    onDeleteClick: (String) -> Unit = {}
+    onReadClick: (Int) -> Unit = {},
+    onEditClick: (Int) -> Unit = {},
+    onDeleteClick: (Int) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
     var read by remember { mutableStateOf(book.read) }
@@ -262,7 +262,7 @@ fun HomeAppBar(navController: NavController) {
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 DropdownMenuItem(
                     onClick = {
-                        navController.navigate("AddEdit/-1")
+                        navController.navigate("AddEdit/0")
                     }
                 ) {
                     Icon(

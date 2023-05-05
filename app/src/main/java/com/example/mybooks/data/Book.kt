@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Book(
-    @PrimaryKey
-    val bookId: String = "",
+    @PrimaryKey(autoGenerate = true)
+    val bookId: Int = 0,
     var title: String = "",
     var author: String = "",
     var firstPublished: Int = 0,
@@ -19,7 +19,6 @@ data class Book(
 fun getInitialBooks(): List<Book> {
     return listOf(
         Book(
-            bookId = "1",
             title = "Victory City",
             author = "Salman Rushdie",
             firstPublished = 2023,
@@ -33,7 +32,6 @@ fun getInitialBooks(): List<Book> {
             read = false
         ),
         Book(
-            bookId = "2",
             title = "Alice's Adventures in Wonderland",
             author = "Lewis Carroll",
             firstPublished = 1865,
@@ -49,7 +47,6 @@ fun getInitialBooks(): List<Book> {
             read = true
         ),
         Book(
-            bookId = "3",
             title = "Le Petit Prince",
             author = "Antoine de Saint-Exupéry",
             firstPublished = 1943,

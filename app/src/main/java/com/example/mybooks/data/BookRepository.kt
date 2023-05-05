@@ -12,6 +12,6 @@ class BookRepository (private val bookDao: BookDao) {
 
     fun getAllBooks(): Flow<List<Book>> = bookDao.getAllBooks()
 
-    fun getBookById(bookId: String): Flow<Book> = bookDao.getBookById(bookId)
+    fun getBookById(bookId: Int): Flow<Book> = bookDao.getBookById(bookId)
 
 }

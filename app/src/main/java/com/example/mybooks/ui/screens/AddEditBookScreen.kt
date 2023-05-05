@@ -28,7 +28,7 @@ fun AddEditBookScreen (
 ) {
     val db = MyBooksDB.getDatabase(LocalContext.current)
     val repository = BookRepository(bookDao = db.bookDao())
-    val factory = bookId?.let { AddEditBookScreenViewModelFactory(repository = repository, bookId = it) }
+    val factory = bookId?.let { AddEditBookScreenViewModelFactory(repository = repository, bookId = it.toInt()) }
     val addEditBookScreenViewModel: AddEditBookScreenViewModel = viewModel(factory = factory)
 
     val book = addEditBookScreenViewModel.book.value
@@ -56,7 +56,7 @@ fun AddEditBookScreen (
                 }
 
                 Text(
-                    text = "Current book: ${book.bookId}, ${book.title}",
+                    text = if (bookId == "0") "Add New Book" else "Edit Book Details",
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(horizontal = 20.dp))
             }
