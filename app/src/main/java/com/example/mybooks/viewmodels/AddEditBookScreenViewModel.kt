@@ -27,14 +27,21 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
         return (title.isNotBlank() && author.isNotBlank() && firstPublished in 0 .. Calendar.getInstance().get(Calendar.YEAR) && isbn.isNotBlank())
     }
 
-    suspend fun saveBook(title: String, author: String, firstPublished: Int, isbn: String) {
+    fun getBook(): Book {
+        return book.value
+    }
+
+    suspend fun saveBook(title: String, author: String, firstPublished: Int, isbn: String, cover: String, plot: String, read: Boolean) {
         if(isValidBook(title, author, firstPublished, isbn)) {
             if (book.value.bookId == 0) {
                 val newBook = Book(
                     title = title,
                     author = author,
                     firstPublished = firstPublished,
-                    isbn = isbn
+                    isbn = isbn,
+                    cover = cover,
+                    plot = plot,
+                    read = read
                 )
                 bookRepository.addBook(newBook)
             } else {
@@ -43,7 +50,10 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
                     title = title,
                     author = author,
                     firstPublished = firstPublished,
-                    isbn = isbn
+                    isbn = isbn,
+                    cover = cover,
+                    plot = plot,
+                    read = read
                 )
                 bookRepository.updateBook(updatedBook)
             }

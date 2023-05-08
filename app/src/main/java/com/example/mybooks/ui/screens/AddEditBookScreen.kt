@@ -1,6 +1,5 @@
 package com.example.mybooks.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -10,6 +9,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -19,8 +19,8 @@ import com.example.mybooks.data.BookRepository
 import com.example.mybooks.data.MyBooksDB
 import com.example.mybooks.viewmodels.AddEditBookScreenViewModel
 import com.example.mybooks.viewmodels.AddEditBookScreenViewModelFactory
+import kotlinx.coroutines.launch
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AddEditBookScreen (
     navController: NavHostController = rememberNavController(),
@@ -31,8 +31,8 @@ fun AddEditBookScreen (
     val factory = bookId?.let { AddEditBookScreenViewModelFactory(repository = repository, bookId = it.toInt()) }
     val addEditBookScreenViewModel: AddEditBookScreenViewModel = viewModel(factory = factory)
 
-    val book = addEditBookScreenViewModel.book.value
     val coroutineScope = rememberCoroutineScope()
+    val book = addEditBookScreenViewModel.getBook()
 
     Column {
         TopAppBar {
@@ -56,12 +56,12 @@ fun AddEditBookScreen (
                 }
 
                 Text(
-                    text = if (bookId == "0") "Add New Book" else "Edit Book Details",
+                    text = if (bookId == "0") "Add New Book" else "Edit Book Details - ${book.title}",
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(horizontal = 20.dp))
             }
         }
-        
+
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,13 +75,149 @@ fun AddEditBookScreen (
                 horizontalAlignment = Alignment.Start
             ) {
 
-                var title by remember {
-                    mutableStateOf("")
+                var title by remember { mutableStateOf(book.title) }
+                var isTitleEmpty by remember { mutableStateOf(false) }
+
+                var author by remember { mutableStateOf("") }
+                var isAuthorEmpty by remember { mutableStateOf(false) }
+
+                var firstPublished by remember { mutableStateOf("") }
+                var isFirstPublishedEmpty by remember { mutableStateOf(false) }
+
+                var isbn by remember { mutableStateOf("") }
+                var isIsbnEmpty by remember { mutableStateOf(false) }
+
+                var cover by remember { mutableStateOf("") }
+
+                var plot by remember { mutableStateOf("") }
+
+                var isEnabledSaveButton by remember { mutableStateOf(false) }
+
+                if (bookId == "0") {
+                    Text(text = "book.title: new book")
+                    Text(text = "title: new book")
+                } else {
+                    Text(text = "book.title: ${book.title}")
+                    Text(text = "title: $title")
                 }
 
-            }
+                OutlinedTextField(
+                    value = title,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = {
+                        title = it
+                        isTitleEmpty = it.isEmpty()
+                    },
+                    label = { Text(text = "Title") },
+                    isError = isTitleEmpty
+                )
+                if(isTitleEmpty) {
+                    Text(
+                        text = "Field must not be empty",
+                        color = Color.Red
+                    )
+                }
 
+                OutlinedTextField(
+                    value = author,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = {
+                        author = it
+                        isAuthorEmpty = it.isEmpty()
+                    },
+                    label = { Text(text = "Author") },
+                    isError = isAuthorEmpty
+                )
+                if(isAuthorEmpty) {
+                    Text(
+                        text = "Field must not be empty",
+                        color = Color.Red
+                    )
+                }
+
+                OutlinedTextField(
+                    value = firstPublished,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = {
+                        firstPublished = it
+                        isFirstPublishedEmpty = it.isEmpty()
+                    },
+                    label = { Text(text = "First published in") },
+                    isError = isFirstPublishedEmpty
+                )
+                if(isFirstPublishedEmpty) {
+                    Text(
+                        text = "Field must not be empty",
+                        color = Color.Red
+                    )
+                }
+
+                OutlinedTextField(
+                    value = isbn,
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = {
+                        isbn = it
+                        isIsbnEmpty = it.isEmpty()
+                    },
+                    label = {  Text(text = "ISBN") },
+                    isError = isIsbnEmpty,
+                )
+                if(isIsbnEmpty) {
+                    Text(
+                        text = "Field must not be empty",
+                        color = Color.Red
+                    )
+                }
+
+                OutlinedTextField(
+                    value = cover,
+                    modifier = Modifier.fillMaxWidth(),
+                    onValueChange = {
+                        cover = it
+                    },
+                    label = { Text(text = "Cover link") },
+                    isError = false
+                )
+
+                OutlinedTextField(
+                    value = plot,
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    onValueChange = {
+                        plot = it
+                    },
+                    label = { Text(text = "Plot") },
+                    isError = false
+                )
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        coroutineScope.launch {
+                            addEditBookScreenViewModel.saveBook(
+                                title = title,
+                                author = book.author,
+                                firstPublished = book.firstPublished,
+                                isbn = book.isbn,
+                                cover = book.cover,
+                                plot = book.plot,
+                                read = book.read
+                            )
+                        }
+                        navController.navigate("home") {
+                            popUpTo("home")
+                        }
+                    }
+                ) {
+                    Text(if (bookId == "0") "Add" else "Save")
+                }
+            }
         }
     }
-
 }
