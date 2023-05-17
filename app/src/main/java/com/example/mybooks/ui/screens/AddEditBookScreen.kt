@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +35,24 @@ fun AddEditBookScreen (
     val coroutineScope = rememberCoroutineScope()
     val book = addEditBookScreenViewModel.getBook()
 
+    var title by rememberSaveable { mutableStateOf(book.title) }
+    var isTitleEmpty by remember { mutableStateOf(false) }
+
+    var author by remember { mutableStateOf("") }
+    var isAuthorEmpty by remember { mutableStateOf(false) }
+
+    var firstPublished by remember { mutableStateOf("") }
+    var isFirstPublishedEmpty by remember { mutableStateOf(false) }
+
+    var isbn by remember { mutableStateOf("") }
+    var isIsbnEmpty by remember { mutableStateOf(false) }
+
+    var cover by remember { mutableStateOf("") }
+
+    var plot by remember { mutableStateOf("") }
+
+    var isEnabledSaveButton by remember { mutableStateOf(false) }
+
     Column {
         TopAppBar {
             Row(
@@ -56,7 +75,7 @@ fun AddEditBookScreen (
                 }
 
                 Text(
-                    text = if (bookId == "0") "Add New Book" else "Edit Book Details - ${book.title}",
+                    text = if (bookId == "0") "Add New Book" else "Edit Book Details",
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(horizontal = 20.dp))
             }
@@ -75,30 +94,13 @@ fun AddEditBookScreen (
                 horizontalAlignment = Alignment.Start
             ) {
 
-                var title by remember { mutableStateOf(book.title) }
-                var isTitleEmpty by remember { mutableStateOf(false) }
-
-                var author by remember { mutableStateOf("") }
-                var isAuthorEmpty by remember { mutableStateOf(false) }
-
-                var firstPublished by remember { mutableStateOf("") }
-                var isFirstPublishedEmpty by remember { mutableStateOf(false) }
-
-                var isbn by remember { mutableStateOf("") }
-                var isIsbnEmpty by remember { mutableStateOf(false) }
-
-                var cover by remember { mutableStateOf("") }
-
-                var plot by remember { mutableStateOf("") }
-
-                var isEnabledSaveButton by remember { mutableStateOf(false) }
 
                 if (bookId == "0") {
                     Text(text = "book.title: new book")
                     Text(text = "title: new book")
                 } else {
-                    Text(text = "book.title: ${book.title}")
-                    Text(text = "title: $title")
+                    Text(text = "var book.title = ${book.title}")
+                    Text(text = "var title = $title")
                 }
 
                 OutlinedTextField(
