@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.example.mybooks.viewmodels
 
 import androidx.lifecycle.ViewModel

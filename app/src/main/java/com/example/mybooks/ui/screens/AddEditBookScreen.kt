@@ -51,7 +51,7 @@ fun AddEditBookScreen (
 
     var plot by remember { mutableStateOf("") }
 
-    var isEnabledSaveButton by remember { mutableStateOf(false) }
+//    var isEnabledSaveButton by remember { mutableStateOf(false) }
 
     Column {
         TopAppBar {
@@ -94,11 +94,8 @@ fun AddEditBookScreen (
                 horizontalAlignment = Alignment.Start
             ) {
 
-
-                if (bookId == "0") {
-                    Text(text = "book.title: new book")
-                    Text(text = "title: new book")
-                } else {
+                if (bookId != "0") {
+                    Text(text = "var book.bookId = ${book.bookId}")
                     Text(text = "var book.title = ${book.title}")
                     Text(text = "var title = $title")
                 }

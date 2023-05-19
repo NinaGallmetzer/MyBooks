@@ -23,7 +23,7 @@ abstract class MyBooksDB : RoomDatabase() {
                     .addCallback(object : Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
-                            Thread { prepopulateDb(context, getDatabase(context)) }.start()
+                            Thread { prepopulateDb(getDatabase(context)) }.start()
                         }
                     })
                     .build()
@@ -33,7 +33,7 @@ abstract class MyBooksDB : RoomDatabase() {
             }
         }
 
-        private fun prepopulateDb(context: Context, db: MyBooksDB) {
+        private fun prepopulateDb(db: MyBooksDB) {
             for (book in getInitialBooks()) {
                 db.bookDao().insertOnCreate(book)
             }
