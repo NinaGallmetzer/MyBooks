@@ -10,7 +10,6 @@ import java.util.*
 
 class AddEditBookScreenViewModel(private val bookRepository: BookRepository, private val bookId: Int = 0): ViewModel() {
 
-
     private val _book = MutableStateFlow(Book())
     val book: StateFlow<Book> = _book.asStateFlow()
 
