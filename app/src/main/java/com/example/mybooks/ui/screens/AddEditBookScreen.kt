@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -40,6 +39,9 @@ fun AddEditBookScreen (
     var isIsbnEmpty by remember { mutableStateOf(false) }
 
     var isEnabledSaveButton by remember { mutableStateOf(false) }
+
+    val labelTextStyle = MaterialTheme.typography.caption.copy(
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium))
 
     Column {
         TopAppBar {
@@ -113,7 +115,7 @@ fun AddEditBookScreen (
                             text = "Read",
                             modifier = Modifier
                                 .padding(start = 10.dp),
-                            fontSize = 12.sp)
+                            style = labelTextStyle)
                         Checkbox(
                             checked = addEditBookScreenViewModel.bookToAdd.read,
                             onCheckedChange = {
