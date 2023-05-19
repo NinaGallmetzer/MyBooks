@@ -23,7 +23,7 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
             bookRepository.getBookById(bookId).collect { book ->
                 _book.value = book
 
-                if(book != null){   // only set the bookToAdd if we are not in "Add" mode
+                if(bookId != 0){   // only set the bookToAdd if we are not in "Add" mode
                     bookToAdd = book    // copy the book if it is not null
                 }
             }
@@ -35,9 +35,8 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
         bookToAdd = newBook
     }
 
-    // TODO: add validation of ISBN
     private fun isValidBook(title: String, author: String, firstPublished: Int, isbn: String): Boolean {
-        return (title.isNotBlank() && author.isNotBlank() && firstPublished in 0 .. Calendar.getInstance().get(Calendar.YEAR) && isbn.isNotBlank())
+        return (title.isNotBlank() && author.isNotBlank() && firstPublished in 0 .. Calendar.getInstance().get(Calendar.YEAR) && isValidISBN(isbn))
     }
 
     // use the already up to date book variable
@@ -49,5 +48,23 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
         } else {
             bookRepository.updateBook(bookToAdd)
         }
+    }
+
+    private fun isValidISBN(isbn: String): Boolean {
+        val cleanISBN = isbn.replace("-", "").replace(" ", "")
+
+        if (cleanISBN.length != 13) {
+            return false
+        }
+
+        var sum = 0
+        for (i in 0 until 12) {
+            val digit = cleanISBN[i].code - '0'.code
+            sum += if (i % 2 == 0) digit else digit * 3
+        }
+
+        val checkDigit = (10 - (sum % 10)) % 10
+        val lastDigit = cleanISBN[12].code - '0'.code
+        return checkDigit == lastDigit
     }
 }

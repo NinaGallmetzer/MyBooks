@@ -38,10 +38,10 @@ fun AddEditBookScreen (
     var isFirstPublishedEmpty by remember { mutableStateOf(false) }
     var isIsbnEmpty by remember { mutableStateOf(false) }
 
-    var isEnabledSaveButton by remember { mutableStateOf(false) }
-
     val labelTextStyle = MaterialTheme.typography.caption.copy(
         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium))
+
+    var isEnabledSaveButton by remember { mutableStateOf(false) }
 
     Column {
         TopAppBar {

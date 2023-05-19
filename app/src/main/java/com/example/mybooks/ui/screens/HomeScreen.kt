@@ -54,25 +54,30 @@ fun BookList(
     val bookList = homeScreenViewModel.bookList.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    LazyColumn {
-        items (bookList.value) { book ->
-            BookRow(
-                book = book,
-                onReadClick = {
-                    coroutineScope.launch {
-                        homeScreenViewModel.toggleReadState(book)
+    if (bookList.value.isEmpty()) {
+        Text(text = "You don't have any books saved in this App.")
+    } else {
+        LazyColumn {
+            items (bookList.value) { book ->
+                BookRow(
+                    book = book,
+                    onReadClick = {
+                        coroutineScope.launch {
+                            homeScreenViewModel.toggleReadState(book)
+                        }
+                    },
+                    onDeleteClick = {
+                        coroutineScope.launch {
+                            homeScreenViewModel.deleteBook(book)
+                        }
+                    },
+                    onEditClick = { bookId ->
+                        navController.navigate("AddEdit/$bookId")
                     }
-                },
-                onDeleteClick = {
-                    coroutineScope.launch {
-                        homeScreenViewModel.deleteBook(book)
-                    }
-                },
-                onEditClick = { bookId ->
-                    navController.navigate("AddEdit/$bookId")
-                }
-            )
+                )
+            }
         }
+
     }
 }
 
