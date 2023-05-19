@@ -7,12 +7,12 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -33,25 +33,13 @@ fun AddEditBookScreen (
     val addEditBookScreenViewModel: AddEditBookScreenViewModel = viewModel(factory = factory)
 
     val coroutineScope = rememberCoroutineScope()
-    val book = addEditBookScreenViewModel.getBook()
 
-    var title by rememberSaveable { mutableStateOf(book.title) }
     var isTitleEmpty by remember { mutableStateOf(false) }
-
-    var author by remember { mutableStateOf("") }
     var isAuthorEmpty by remember { mutableStateOf(false) }
-
-    var firstPublished by remember { mutableStateOf("") }
     var isFirstPublishedEmpty by remember { mutableStateOf(false) }
-
-    var isbn by remember { mutableStateOf("") }
     var isIsbnEmpty by remember { mutableStateOf(false) }
 
-    var cover by remember { mutableStateOf("") }
-
-    var plot by remember { mutableStateOf("") }
-
-//    var isEnabledSaveButton by remember { mutableStateOf(false) }
+    var isEnabledSaveButton by remember { mutableStateOf(false) }
 
     Column {
         TopAppBar {
@@ -93,37 +81,54 @@ fun AddEditBookScreen (
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
             ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Box(modifier = Modifier.weight(2f)) {
+                        OutlinedTextField(
+                            value = addEditBookScreenViewModel.bookToAdd.title,
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            onValueChange = {
+                                // pass the new title to the VM to update the book state
+                                addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(title = it))
+                                // you can validate inputs with an EventClass - see LD04
+                                isTitleEmpty = it.isEmpty()
+                            },
+                            label = { Text(text = "Title") },
+                            isError = isTitleEmpty
+                        )
+                        if(isTitleEmpty) {
+                            Text(
+                                text = "Field must not be empty",
+                                color = Color.Red
+                            )
+                        }
+                    }
 
-                if (bookId != "0") {
-                    Text(text = "var book.bookId = ${book.bookId}")
-                    Text(text = "var book.title = ${book.title}")
-                    Text(text = "var title = $title")
+                    Column(modifier = Modifier) {
+                        Text(
+                            text = "Read",
+                            modifier = Modifier
+                                .padding(start = 10.dp),
+                            fontSize = 12.sp)
+                        Checkbox(
+                            checked = addEditBookScreenViewModel.bookToAdd.read,
+                            onCheckedChange = {
+                                addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(read = it))
+                            }
+                        )
+                    }
                 }
 
                 OutlinedTextField(
-                    value = title,
+                    value = addEditBookScreenViewModel.bookToAdd.author,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        title = it
-                        isTitleEmpty = it.isEmpty()
-                    },
-                    label = { Text(text = "Title") },
-                    isError = isTitleEmpty
-                )
-                if(isTitleEmpty) {
-                    Text(
-                        text = "Field must not be empty",
-                        color = Color.Red
-                    )
-                }
-
-                OutlinedTextField(
-                    value = author,
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = {
-                        author = it
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(author = it))
                         isAuthorEmpty = it.isEmpty()
                     },
                     label = { Text(text = "Author") },
@@ -137,11 +142,11 @@ fun AddEditBookScreen (
                 }
 
                 OutlinedTextField(
-                    value = firstPublished,
+                    value = addEditBookScreenViewModel.bookToAdd.firstPublished.toString(),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        firstPublished = it
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(firstPublished = it.toInt()))
                         isFirstPublishedEmpty = it.isEmpty()
                     },
                     label = { Text(text = "First published in") },
@@ -155,11 +160,11 @@ fun AddEditBookScreen (
                 }
 
                 OutlinedTextField(
-                    value = isbn,
+                    value = addEditBookScreenViewModel.bookToAdd.isbn,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        isbn = it
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(isbn = it))
                         isIsbnEmpty = it.isEmpty()
                     },
                     label = {  Text(text = "ISBN") },
@@ -173,23 +178,22 @@ fun AddEditBookScreen (
                 }
 
                 OutlinedTextField(
-                    value = cover,
+                    value = addEditBookScreenViewModel.bookToAdd.cover,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        cover = it
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(cover = it))
                     },
                     label = { Text(text = "Cover link") },
                     isError = false
                 )
 
                 OutlinedTextField(
-                    value = plot,
-                    singleLine = true,
+                    value = addEditBookScreenViewModel.bookToAdd.plot,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(120.dp),
+                        .height(360.dp),
                     onValueChange = {
-                        plot = it
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(plot = it))
                     },
                     label = { Text(text = "Plot") },
                     isError = false
@@ -199,15 +203,7 @@ fun AddEditBookScreen (
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         coroutineScope.launch {
-                            addEditBookScreenViewModel.saveBook(
-                                title = title,
-                                author = book.author,
-                                firstPublished = book.firstPublished,
-                                isbn = book.isbn,
-                                cover = book.cover,
-                                plot = book.plot,
-                                read = book.read
-                            )
+                            addEditBookScreenViewModel.saveBook()
                         }
                         navController.navigate("home") {
                             popUpTo("home")
