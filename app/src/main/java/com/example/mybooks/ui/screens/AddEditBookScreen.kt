@@ -7,7 +7,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,9 +32,10 @@ fun AddEditBookScreen (
     val addEditBookScreenViewModel: AddEditBookScreenViewModel = viewModel(factory = factory)
 
     val coroutineScope = rememberCoroutineScope()
-    val book = addEditBookScreenViewModel.getBook()
+    //val book = addEditBookScreenViewModel.getBook() // dont need this, use addEditBookScreenViewModel.book instead
+    val book = addEditBookScreenViewModel.book.collectAsState()
 
-    var title by rememberSaveable { mutableStateOf(book.title) }
+    //var title by rememberSaveable { mutableStateOf(book.title) }
     var isTitleEmpty by remember { mutableStateOf(false) }
 
     var author by remember { mutableStateOf("") }
@@ -99,17 +99,19 @@ fun AddEditBookScreen (
                     Text(text = "book.title: new book")
                     Text(text = "title: new book")
                 } else {
-                    Text(text = "var book.title = ${book.title}")
-                    Text(text = "var title = $title")
+                    Text(text = "var book.title = ${book.value.title}")
+                    Text(text = book.value.title)
                 }
 
                 OutlinedTextField(
-                    value = title,
+                    value = addEditBookScreenViewModel.bookToAdd.title,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        title = it
-                        isTitleEmpty = it.isEmpty()
+                        // pass the new title to the VM to update the book state
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(title = it))
+                        // you can validate inputs with an EventClass - see LD04
+                        // isTitleEmpty = it.isEmpty()
                     },
                     label = { Text(text = "Title") },
                     isError = isTitleEmpty
@@ -202,6 +204,8 @@ fun AddEditBookScreen (
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         coroutineScope.launch {
+                            addEditBookScreenViewModel.saveBook()
+                            /*
                             addEditBookScreenViewModel.saveBook(
                                 title = title,
                                 author = book.author,
@@ -211,6 +215,8 @@ fun AddEditBookScreen (
                                 plot = book.plot,
                                 read = book.read
                             )
+
+                             */
                         }
                         navController.navigate("home") {
                             popUpTo("home")
