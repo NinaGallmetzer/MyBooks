@@ -1,6 +1,7 @@
 package com.example.mybooks.ui.screens
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,12 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.mybooks.R
 import com.example.mybooks.data.Book
 import com.example.mybooks.data.BookRepository
 import com.example.mybooks.data.MyBooksDB
@@ -105,12 +108,16 @@ fun BookRow(
                     .height(175.dp)
             ) {
                 Row {
-                    AsyncImage(
-                        model = book.cover,
-                        contentDescription = book.title,
-                        modifier = Modifier
-                            .fillMaxHeight()
-                    )
+                    if (book.cover.isNotEmpty()) {
+                        AsyncImage(
+                            model = book.cover,
+                            contentDescription = book.title,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                        )
+                    } else {
+                        Image(painter = painterResource(id = R.drawable.no_image_placeholder), contentDescription = "Prev Image")
+                    }
 
                     Column(
                         modifier = Modifier
@@ -267,7 +274,7 @@ fun HomeAppBar(navController: NavController) {
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 DropdownMenuItem(
                     onClick = {
-                        navController.navigate("AddEdit/0")
+                        navController.navigate("Add")
                     }
                 ) {
                     Icon(

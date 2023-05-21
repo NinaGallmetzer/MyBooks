@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.mybooks.ui.screens.AddBookScreen
 import com.example.mybooks.ui.screens.AddEditBookScreen
 import com.example.mybooks.ui.screens.HomeScreen
 
@@ -18,6 +19,10 @@ fun Navigation(
 
         composable(route = "AddEdit/{bookId}") { backStackEntry ->
             AddEditBookScreen(navController, bookId = backStackEntry.arguments?.getString("bookId"))
+        }
+
+        composable(route = "Add") {
+            AddBookScreen(navController)
         }
     }
 }
