@@ -14,7 +14,7 @@ import java.util.*
 class AddEditBookScreenViewModel(private val bookRepository: BookRepository, private val bookId: Int = 0): ViewModel() {
 
     private val _book = MutableStateFlow(Book())
-    val book: StateFlow<Book> = _book.asStateFlow()
+    var book: StateFlow<Book> = _book.asStateFlow()
     var bookToAdd by mutableStateOf(Book())
         private set
 
@@ -32,14 +32,19 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
 
     // update the bookToAdd state based on UI onValueChange events
     fun updateBook(newBook: Book) {
-        bookToAdd = newBook
+        if(book.value.bookId == 0) {
+            _book.value = newBook
+        } else {
+            bookToAdd = newBook
+        }
+
     }
 
     // use the already up to date book variable
     suspend fun saveBook(){
         // check if we need to update the book or add a new one
         if(book.value.bookId == 0) {
-            bookRepository.addBook(bookToAdd)
+            bookRepository.addBook(book.value)
         } else {
             bookRepository.updateBook(bookToAdd)
         }

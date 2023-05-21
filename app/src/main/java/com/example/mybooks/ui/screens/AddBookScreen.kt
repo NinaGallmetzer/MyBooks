@@ -65,7 +65,7 @@ fun AddBookScreen (
                 }
 
                 Text(
-                    text = "Add a New Book",
+                    text = "Add New Book",
                     style = MaterialTheme.typography.h6,
                     modifier = Modifier.padding(horizontal = 20.dp))
             }
@@ -192,7 +192,7 @@ fun AddBookScreen (
                     value = addBookScreenViewModel.book.plot,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
+                        .height(300.dp),
                     onValueChange = {
                         addBookScreenViewModel.updateBook(addBookScreenViewModel.book.copy(plot = it))
                     },

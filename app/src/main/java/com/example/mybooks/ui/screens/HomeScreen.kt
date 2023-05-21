@@ -222,7 +222,7 @@ fun BookRow(
                         modifier = Modifier
                             .padding(5.dp))
                     Text(
-                        text = book.plot,
+                        text = book.plot.ifBlank { "No plot available." },
                         modifier = Modifier
                             .padding(5.dp))
                 }

@@ -193,7 +193,7 @@ fun AddEditBookScreen (
                     value = addEditBookScreenViewModel.bookToAdd.plot,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(280.dp),
+                        .height(300.dp),
                     onValueChange = {
                         addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(plot = it))
                     },
