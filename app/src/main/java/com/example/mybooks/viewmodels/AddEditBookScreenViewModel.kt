@@ -35,22 +35,33 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
         bookToAdd = newBook
     }
 
-    private fun isValidBook(title: String, author: String, firstPublished: Int, isbn: String): Boolean {
-        return (title.isNotBlank() && author.isNotBlank() && firstPublished in 0 .. Calendar.getInstance().get(Calendar.YEAR) && isValidISBN(isbn))
+    fun isValidBook(title: String, author: String, firstPublished: Int, isbn: String): Boolean {
+        return (isValidTitle(title) && isValidAuthor(author) && isValidFirstPublished(firstPublished) && isValidISBN(isbn))
     }
 
     // use the already up to date book variable
     suspend fun saveBook(){
         // check if we need to update the book or add a new one
-
         if(book.value.bookId == 0) {
-            bookRepository.addBook(bookToAdd)
+            bookRepository.addBook(book.value)
         } else {
             bookRepository.updateBook(bookToAdd)
         }
     }
 
-    private fun isValidISBN(isbn: String): Boolean {
+    fun isValidTitle(title: String): Boolean {
+        return title.isNotBlank()
+    }
+
+    fun isValidAuthor(author: String): Boolean {
+        return author.isNotBlank()
+    }
+
+    fun isValidFirstPublished(firstPublished: Int): Boolean {
+        return firstPublished in 0 .. Calendar.getInstance().get(Calendar.YEAR)
+    }
+
+    fun isValidISBN(isbn: String): Boolean {
         val cleanISBN = isbn.replace("-", "").replace(" ", "")
 
         if (cleanISBN.length != 13) {

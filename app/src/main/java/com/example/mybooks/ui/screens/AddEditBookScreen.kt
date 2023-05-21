@@ -20,6 +20,7 @@ import com.example.mybooks.data.MyBooksDB
 import com.example.mybooks.viewmodels.AddEditBookScreenViewModel
 import com.example.mybooks.viewmodels.AddEditBookScreenViewModelFactory
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @Composable
 fun AddEditBookScreen (
@@ -33,10 +34,10 @@ fun AddEditBookScreen (
 
     val coroutineScope = rememberCoroutineScope()
 
-    var isTitleEmpty by remember { mutableStateOf(false) }
-    var isAuthorEmpty by remember { mutableStateOf(false) }
-    var isFirstPublishedEmpty by remember { mutableStateOf(false) }
-    var isIsbnEmpty by remember { mutableStateOf(false) }
+    var isValidTitle by remember { mutableStateOf(true) }
+    var isValidAuthor by remember { mutableStateOf(true) }
+    var isValidFirstPublished by remember { mutableStateOf(true) }
+    var isValidISBN by remember { mutableStateOf(true) }
 
     val labelTextStyle = MaterialTheme.typography.caption.copy(
         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium))
@@ -94,17 +95,16 @@ fun AddEditBookScreen (
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             onValueChange = {
-                                // pass the new title to the VM to update the book state
                                 addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(title = it))
                                 // you can validate inputs with an EventClass - see LD04
-                                isTitleEmpty = it.isEmpty()
+                                isValidTitle = addEditBookScreenViewModel.isValidTitle(it)
                             },
                             label = { Text(text = "Title") },
-                            isError = isTitleEmpty
+                            isError = !isValidTitle
                         )
-                        if(isTitleEmpty) {
+                        if(!isValidTitle) {
                             Text(
-                                text = "Field must not be empty",
+                                text = "Title must not be empty",
                                 color = Color.Red
                             )
                         }
@@ -131,14 +131,14 @@ fun AddEditBookScreen (
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
                         addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(author = it))
-                        isAuthorEmpty = it.isEmpty()
+                        isValidAuthor = addEditBookScreenViewModel.isValidAuthor(it)
                     },
                     label = { Text(text = "Author") },
-                    isError = isAuthorEmpty
+                    isError = !isValidAuthor
                 )
-                if(isAuthorEmpty) {
+                if(!isValidAuthor) {
                     Text(
-                        text = "Field must not be empty",
+                        text = "Author must not be empty",
                         color = Color.Red
                     )
                 }
@@ -149,14 +149,14 @@ fun AddEditBookScreen (
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
                         addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(firstPublished = it.toInt()))
-                        isFirstPublishedEmpty = it.isEmpty()
+                        isValidFirstPublished = addEditBookScreenViewModel.isValidFirstPublished(it.toInt())
                     },
                     label = { Text(text = "First published in") },
-                    isError = isFirstPublishedEmpty
+                    isError = !isValidFirstPublished
                 )
-                if(isFirstPublishedEmpty) {
+                if(!isValidFirstPublished) {
                     Text(
-                        text = "Field must not be empty",
+                        text = "Year of first publication must be between 0 and ${Calendar.getInstance().get(Calendar.YEAR)}",
                         color = Color.Red
                     )
                 }
@@ -167,14 +167,14 @@ fun AddEditBookScreen (
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
                         addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(isbn = it))
-                        isIsbnEmpty = it.isEmpty()
+                        isValidISBN = addEditBookScreenViewModel.isValidISBN(it)
                     },
                     label = {  Text(text = "ISBN") },
-                    isError = isIsbnEmpty,
+                    isError = !isValidISBN,
                 )
-                if(isIsbnEmpty) {
+                if(!isValidISBN) {
                     Text(
-                        text = "Field must not be empty",
+                        text = "Invalid ISBN.",
                         color = Color.Red
                     )
                 }
@@ -193,7 +193,7 @@ fun AddEditBookScreen (
                     value = addEditBookScreenViewModel.bookToAdd.plot,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(360.dp),
+                        .height(280.dp),
                     onValueChange = {
                         addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(plot = it))
                     },
@@ -201,7 +201,22 @@ fun AddEditBookScreen (
                     isError = false
                 )
 
+                isEnabledSaveButton = addEditBookScreenViewModel.isValidBook(
+                    title = addEditBookScreenViewModel.bookToAdd.title,
+                    author = addEditBookScreenViewModel.bookToAdd.author,
+                    firstPublished = addEditBookScreenViewModel.bookToAdd.firstPublished,
+                    isbn = addEditBookScreenViewModel.bookToAdd.isbn
+                )
+
+                if (bookId == "0") {
+                    Text(text = "bookToAdd.title: ${addEditBookScreenViewModel.bookToAdd.title}")
+                    Text(text = "bookToAdd.author: ${addEditBookScreenViewModel.bookToAdd.author}")
+                    Text(text = "bookToAdd.firstpub: ${addEditBookScreenViewModel.bookToAdd.firstPublished}")
+                    Text(text = "bookToAdd.isbn: ${addEditBookScreenViewModel.bookToAdd.isbn}")
+                }
+
                 Button(
+                    enabled = isEnabledSaveButton,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
                         coroutineScope.launch {
