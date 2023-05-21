@@ -35,18 +35,18 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
         bookToAdd = newBook
     }
 
-    fun isValidBook(title: String, author: String, firstPublished: Int, isbn: String): Boolean {
-        return (isValidTitle(title) && isValidAuthor(author) && isValidFirstPublished(firstPublished) && isValidISBN(isbn))
-    }
-
     // use the already up to date book variable
     suspend fun saveBook(){
         // check if we need to update the book or add a new one
         if(book.value.bookId == 0) {
-            bookRepository.addBook(book.value)
+            bookRepository.addBook(bookToAdd)
         } else {
             bookRepository.updateBook(bookToAdd)
         }
+    }
+
+    fun isValidBook(title: String, author: String, firstPublished: Int, isbn: String): Boolean {
+        return (isValidTitle(title) && isValidAuthor(author) && isValidFirstPublished(firstPublished) && isValidISBN(isbn))
     }
 
     fun isValidTitle(title: String): Boolean {
