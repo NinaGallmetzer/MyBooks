@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -112,11 +113,19 @@ fun BookRow(
                         AsyncImage(
                             model = book.cover,
                             contentDescription = book.title,
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .fillMaxHeight()
+                                .width(115.dp)
                         )
                     } else {
-                        Image(painter = painterResource(id = R.drawable.no_image_placeholder), contentDescription = "Prev Image")
+                        Image(
+                            painter = painterResource(id = R.drawable.no_image_placeholder),
+                            contentDescription = "Prev Image",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(115.dp))
                     }
 
                     Column(

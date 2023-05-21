@@ -207,12 +207,6 @@ fun AddBookScreen (
                     isbn = addBookScreenViewModel.book.isbn
                 )
 
-                Text(text = "book.bookId: ${addBookScreenViewModel.book.bookId}")
-                Text(text = "book.title: ${addBookScreenViewModel.book.title}")
-                Text(text = "book.author: ${addBookScreenViewModel.book.author}")
-                Text(text = "book.firstpub: ${addBookScreenViewModel.book.firstPublished}")
-                Text(text = "book.isbn: ${addBookScreenViewModel.book.isbn}")
-
                 Button(
                     enabled = isEnabledSaveButton,
                     modifier = Modifier.fillMaxWidth(),

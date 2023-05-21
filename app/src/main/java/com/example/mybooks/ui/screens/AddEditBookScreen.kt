@@ -208,13 +208,6 @@ fun AddEditBookScreen (
                     isbn = addEditBookScreenViewModel.bookToAdd.isbn
                 )
 
-                if (bookId == "0") {
-                    Text(text = "bookToAdd.title: ${addEditBookScreenViewModel.bookToAdd.title}")
-                    Text(text = "bookToAdd.author: ${addEditBookScreenViewModel.bookToAdd.author}")
-                    Text(text = "bookToAdd.firstpub: ${addEditBookScreenViewModel.bookToAdd.firstPublished}")
-                    Text(text = "bookToAdd.isbn: ${addEditBookScreenViewModel.bookToAdd.isbn}")
-                }
-
                 Button(
                     enabled = isEnabledSaveButton,
                     modifier = Modifier.fillMaxWidth(),
