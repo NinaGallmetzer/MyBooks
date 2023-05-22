@@ -7,23 +7,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mybooks.data.Book
 import com.example.mybooks.data.BookRepository
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 
 class AddEditBookScreenViewModel(private val bookRepository: BookRepository, private val bookId: Int = 0): ViewModel() {
 
-    private val _book = MutableStateFlow(Book())
-    var book: StateFlow<Book> = _book.asStateFlow()
     var bookToAdd by mutableStateOf(Book())
         private set
 
     init {
         viewModelScope.launch {
-            bookRepository.getBookById(bookId).collect { book ->
-                _book.value = book
-
-                if(bookId != 0){   // only set the bookToAdd if we are not in "Add" mode
+            if (bookId == 0) {
+                bookToAdd = Book()
+            } else {
+                bookRepository.getBookById(bookId).collect { book ->
                     bookToAdd = book    // copy the book if it is not null
                 }
             }
@@ -32,19 +29,14 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
 
     // update the bookToAdd state based on UI onValueChange events
     fun updateBook(newBook: Book) {
-        if(book.value.bookId == 0) {
-            _book.value = newBook
-        } else {
-            bookToAdd = newBook
-        }
-
+        bookToAdd = newBook
     }
 
     // use the already up to date book variable
     suspend fun saveBook(){
         // check if we need to update the book or add a new one
-        if(book.value.bookId == 0) {
-            bookRepository.addBook(book.value)
+        if(bookId == 0) {
+            bookRepository.addBook(bookToAdd)
         } else {
             bookRepository.updateBook(bookToAdd)
         }

@@ -283,7 +283,7 @@ fun HomeAppBar(navController: NavController) {
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 DropdownMenuItem(
                     onClick = {
-                        navController.navigate("Add")
+                        navController.navigate("AddEdit/0")
                     }
                 ) {
                     Icon(
