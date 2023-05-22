@@ -28,6 +28,7 @@ import com.example.mybooks.R
 import com.example.mybooks.data.Book
 import com.example.mybooks.data.BookRepository
 import com.example.mybooks.data.MyBooksDB
+import com.example.mybooks.ui.navigation.Screen
 import com.example.mybooks.viewmodels.HomeScreenViewModel
 import com.example.mybooks.viewmodels.HomeScreenViewModelFactory
 import kotlinx.coroutines.launch
@@ -76,7 +77,7 @@ fun BookList(
                         }
                     },
                     onEditClick = { bookId ->
-                        navController.navigate("AddEdit/$bookId")
+                        navController.navigate(Screen.AddEditBookScreen.withId(bookId.toString()))
                     }
                 )
             }
@@ -283,7 +284,7 @@ fun HomeAppBar(navController: NavController) {
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                 DropdownMenuItem(
                     onClick = {
-                        navController.navigate("AddEdit/0")
+                        navController.navigate(Screen.AddEditBookScreen.withId("0"))
                     }
                 ) {
                     Icon(

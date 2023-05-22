@@ -11,16 +11,13 @@ import com.example.mybooks.ui.screens.HomeScreen
 fun Navigation(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = "Home") {
-        composable(route = "Home") {
+    NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
+        composable(route = Screen.HomeScreen.route) {
             HomeScreen(navController)
         }
 
-        composable(route = "AddEdit/{bookId}") { backStackEntry ->
+        composable(route = Screen.AddEditBookScreen.route) { backStackEntry ->
             AddEditBookScreen(navController, bookId = backStackEntry.arguments?.getString("bookId"))
         }
     }
 }
-
-
-

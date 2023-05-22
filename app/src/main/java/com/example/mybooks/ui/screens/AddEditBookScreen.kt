@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.mybooks.data.BookRepository
 import com.example.mybooks.data.MyBooksDB
+import com.example.mybooks.ui.navigation.Screen
 import com.example.mybooks.viewmodels.AddEditBookScreenViewModel
 import com.example.mybooks.viewmodels.AddEditBookScreenViewModelFactory
 import kotlinx.coroutines.launch
@@ -54,8 +55,8 @@ fun AddEditBookScreen (
                 IconButton(
                     modifier = Modifier.size(24.dp),
                     onClick = {
-                        navController.navigate("home") {
-                            popUpTo("home")
+                        navController.navigate(Screen.HomeScreen.route) {
+                            popUpTo(Screen.HomeScreen.route)
                         }
                     },
                 ) {
@@ -215,8 +216,8 @@ fun AddEditBookScreen (
                         coroutineScope.launch {
                             addEditBookScreenViewModel.saveBook()
                         }
-                        navController.navigate("home") {
-                            popUpTo("home")
+                        navController.navigate(Screen.HomeScreen.route) {
+                            popUpTo(Screen.HomeScreen.route)
                         }
                     }
                 ) {
