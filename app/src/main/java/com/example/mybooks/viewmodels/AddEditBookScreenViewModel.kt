@@ -12,16 +12,16 @@ import java.util.*
 
 class AddEditBookScreenViewModel(private val bookRepository: BookRepository, private val bookId: Int = 0): ViewModel() {
 
-    var bookToAdd by mutableStateOf(Book())
+    var book by mutableStateOf(Book())
         private set
 
     init {
         viewModelScope.launch {
             if (bookId == 0) {
-                bookToAdd = Book()
+                book = Book()
             } else {
                 bookRepository.getBookById(bookId).collect { book ->
-                    bookToAdd = book    // copy the book if it is not null
+                    this@AddEditBookScreenViewModel.book = book    // copy the book if it is not null
                 }
             }
         }
@@ -29,16 +29,16 @@ class AddEditBookScreenViewModel(private val bookRepository: BookRepository, pri
 
     // update the bookToAdd state based on UI onValueChange events
     fun updateBook(newBook: Book) {
-        bookToAdd = newBook
+        book = newBook
     }
 
     // use the already up to date book variable
     suspend fun saveBook(){
         // check if we need to update the book or add a new one
         if(bookId == 0) {
-            bookRepository.addBook(bookToAdd)
+            bookRepository.addBook(book)
         } else {
-            bookRepository.updateBook(bookToAdd)
+            bookRepository.updateBook(book)
         }
     }
 

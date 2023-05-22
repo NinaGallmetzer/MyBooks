@@ -91,11 +91,11 @@ fun AddEditBookScreen (
                 ) {
                     Box(modifier = Modifier.weight(2f)) {
                         OutlinedTextField(
-                            value = addEditBookScreenViewModel.bookToAdd.title,
+                            value = addEditBookScreenViewModel.book.title,
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             onValueChange = {
-                                addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(title = it))
+                                addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(title = it))
                                 // you can validate inputs with an EventClass - see LD04
                                 isValidTitle = addEditBookScreenViewModel.isValidTitle(it)
                             },
@@ -117,20 +117,20 @@ fun AddEditBookScreen (
                                 .padding(start = 10.dp),
                             style = labelTextStyle)
                         Checkbox(
-                            checked = addEditBookScreenViewModel.bookToAdd.read,
+                            checked = addEditBookScreenViewModel.book.read,
                             onCheckedChange = {
-                                addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(read = it))
+                                addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(read = it))
                             }
                         )
                     }
                 }
 
                 OutlinedTextField(
-                    value = addEditBookScreenViewModel.bookToAdd.author,
+                    value = addEditBookScreenViewModel.book.author,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(author = it))
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(author = it))
                         isValidAuthor = addEditBookScreenViewModel.isValidAuthor(it)
                     },
                     label = { Text(text = "Author") },
@@ -144,11 +144,11 @@ fun AddEditBookScreen (
                 }
 
                 OutlinedTextField(
-                    value = addEditBookScreenViewModel.bookToAdd.firstPublished.toString(),
+                    value = addEditBookScreenViewModel.book.firstPublished.toString(),
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(firstPublished = it.toInt()))
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(firstPublished = it.toInt()))
                         isValidFirstPublished = addEditBookScreenViewModel.isValidFirstPublished(it.toInt())
                     },
                     label = { Text(text = "First published in") },
@@ -162,11 +162,11 @@ fun AddEditBookScreen (
                 }
 
                 OutlinedTextField(
-                    value = addEditBookScreenViewModel.bookToAdd.isbn,
+                    value = addEditBookScreenViewModel.book.isbn,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(isbn = it))
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(isbn = it))
                         isValidISBN = addEditBookScreenViewModel.isValidISBN(it)
                     },
                     label = {  Text(text = "ISBN") },
@@ -180,32 +180,32 @@ fun AddEditBookScreen (
                 }
 
                 OutlinedTextField(
-                    value = addEditBookScreenViewModel.bookToAdd.cover,
+                    value = addEditBookScreenViewModel.book.cover,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(cover = it))
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(cover = it))
                     },
                     label = { Text(text = "Cover link") },
                     isError = false
                 )
 
                 OutlinedTextField(
-                    value = addEditBookScreenViewModel.bookToAdd.plot,
+                    value = addEditBookScreenViewModel.book.plot,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp),
                     onValueChange = {
-                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.bookToAdd.copy(plot = it))
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(plot = it))
                     },
                     label = { Text(text = "Plot") },
                     isError = false
                 )
 
                 isEnabledSaveButton = addEditBookScreenViewModel.isValidBook(
-                    title = addEditBookScreenViewModel.bookToAdd.title,
-                    author = addEditBookScreenViewModel.bookToAdd.author,
-                    firstPublished = addEditBookScreenViewModel.bookToAdd.firstPublished,
-                    isbn = addEditBookScreenViewModel.bookToAdd.isbn
+                    title = addEditBookScreenViewModel.book.title,
+                    author = addEditBookScreenViewModel.book.author,
+                    firstPublished = addEditBookScreenViewModel.book.firstPublished,
+                    isbn = addEditBookScreenViewModel.book.isbn
                 )
 
                 Button(
