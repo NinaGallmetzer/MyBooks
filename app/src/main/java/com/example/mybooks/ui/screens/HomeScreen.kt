@@ -82,7 +82,7 @@ fun BookList(
 
             if (filteredBooks.isEmpty()) {
                 Text(modifier = Modifier.padding(15.dp),
-                    text = "You don't have any books saved in this App that match you search criteria.")
+                    text = "You don't have any books saved in this App matching you search criteria.")
             }
 
             LazyColumn {
