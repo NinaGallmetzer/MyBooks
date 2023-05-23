@@ -1,6 +1,7 @@
 package com.example.mybooks.ui.navigation
 
 const val DETAIL_ARGUMENT_KEY = "bookId"
+
 sealed class Screen (val route: String) {
     object HomeScreen : Screen("Home")
     object AddEditBookScreen : Screen("AddEditBook/{$DETAIL_ARGUMENT_KEY}") {

@@ -56,33 +56,56 @@ fun BookList(
     val factory = HomeScreenViewModelFactory(repository = repository)
     val homeScreenViewModel: HomeScreenViewModel = viewModel(factory = factory)
 
-    val bookList = homeScreenViewModel.bookList.collectAsState()
+    val books = homeScreenViewModel.books.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    var searchText by remember { mutableStateOf("") }
 
-    if (bookList.value.isEmpty()) {
-        Text(text = "You don't have any books saved in this App.")
-    } else {
-        LazyColumn {
-            items (bookList.value) { book ->
-                BookRow(
-                    book = book,
-                    onReadClick = {
-                        coroutineScope.launch {
-                            homeScreenViewModel.toggleReadState(book)
-                        }
-                    },
-                    onDeleteClick = {
-                        coroutineScope.launch {
-                            homeScreenViewModel.deleteBook(book)
-                        }
-                    },
-                    onEditClick = { bookId ->
-                        navController.navigate(Screen.AddEditBookScreen.withId(bookId.toString()))
-                    }
-                )
-            }
+    val filteredBooks =
+        if (searchText.isNotBlank()) {
+            books.value.filter { book ->
+                book.title.contains(searchText, ignoreCase = true) || book.author.contains(searchText, ignoreCase = true) }
+        } else {
+            books.value
         }
 
+    Column {
+        if (books.value.isEmpty()) {
+            Text(modifier = Modifier.padding(15.dp),
+                text = "You don't have any books saved in this App.")
+        } else {
+            TextField(
+                value = searchText,
+                onValueChange = { searchText = it },
+                label = { Text("Search") },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            if (filteredBooks.isEmpty()) {
+                Text(modifier = Modifier.padding(15.dp),
+                    text = "You don't have any books saved in this App that match you search criteria.")
+            }
+
+            LazyColumn {
+                items (filteredBooks) { book ->
+                    BookRow(
+                        book = book,
+                        onReadClick = {
+                            coroutineScope.launch {
+                                homeScreenViewModel.toggleReadState(book)
+                            }
+                        },
+                        onDeleteClick = {
+                            coroutineScope.launch {
+                                homeScreenViewModel.deleteBook(book)
+                            }
+                        },
+                        onEditClick = { bookId ->
+                            navController.navigate(Screen.AddEditBookScreen.withId(bookId.toString()))
+                        }
+                    )
+                }
+            }
+        }
     }
 }
 

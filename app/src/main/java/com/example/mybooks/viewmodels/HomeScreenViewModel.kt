@@ -9,14 +9,14 @@ import kotlinx.coroutines.launch
 
 class HomeScreenViewModel(private val bookRepository: BookRepository): ViewModel() {
 
-    private val _bookList = MutableStateFlow(listOf<Book>())
-    val bookList: StateFlow<List<Book>> = _bookList.asStateFlow()
+    private val _books = MutableStateFlow(listOf<Book>())
+    val books: StateFlow<List<Book>> = _books.asStateFlow()
 
     init {
         viewModelScope.launch {
-            bookRepository.getAllBooks().collect() { bookList ->
-                if (bookList.isNotEmpty()) {
-                    _bookList.value = bookList
+            bookRepository.getAllBooks().collect{ bookList ->
+                if(bookList.isNotEmpty()) {
+                    _books.value = bookList
                 }
             }
         }
