@@ -149,8 +149,8 @@ fun AddEditBookScreen (
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     onValueChange = {
-                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(firstPublished = it.toInt()))
-                        isValidFirstPublished = addEditBookScreenViewModel.isValidFirstPublished(it.toInt())
+                        addEditBookScreenViewModel.updateBook(addEditBookScreenViewModel.book.copy(firstPublished = it.toIntOrNull() ?: 0))
+                        isValidFirstPublished = addEditBookScreenViewModel.isValidFirstPublished(it.toIntOrNull() ?: 0)
                     },
                     label = { Text(text = "First published in") },
                     isError = !isValidFirstPublished
